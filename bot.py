@@ -1,10 +1,18 @@
 import discord
 from discord.ext import commands
+import json
 
-bot = commands.bot(commands_prefix='!')
+with open('setting.json', 'r', encoding='UTF-8') as json_file:
+    json_data = json.load(json_file)
+    
+intents = discord.Intents.default()
+intents.typing = False
+intents.presences = False
+
+bot = commands.Bot(command_prefix='!', intents=intents)
 
 @bot.event
-async def bot_online():
+async def on_ready():
     print("Bot is online")
 
-bot.run('MTA2NzM0MDAwMDE1MDE2NzYzMg.GU1MTo.CpWBdt64SZZxuaYeyq-PhH2roItZdZ7ikEJM4Q')
+bot.run(json_data["TOKEN"])
