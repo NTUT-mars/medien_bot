@@ -1,10 +1,14 @@
 #導入 Discord.py
 import discord
-from discord.ext import commands
 import json
 import os
+from discord.ext import commands
+from core.classes import Cog_Extension
+
+
 
 #讀取"setting.json"中的函數
+#'r'：讀取，'w'：寫入
 with open('setting.json', 'r', encoding='UTF-8') as json_file:
     json_data = json.load(json_file)
 
@@ -20,21 +24,22 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 async def on_ready():
     print("Bot is online")
 
-#可以在bot還在執行中
-#新增更新好的指令
+#可以在bot還在執行中，新增更新好的指令
 @bot.command()
 async def load(ctx, ext):
     bot.load_extension(f'cmds.{ext}')
 
-#可以在bot還在執行中
-#移除不要的指令
+#可以在bot還在執行中，移除不要的指令
 @bot.command()
 async def un_load(ctx, ext):
     bot.unload_extension(f'cmds.{ext}')
 
 #載入cmds資料夾中所有的cog
+#bot.load_extension(f'cmds.{filename[:-3]}')-->從檔案的最後面開始移除顯示3個字元
 for filename in os.listdir('./cmds'):
     if filename.endswith('.py'):
         bot.load_extension(f'cmds.{filename[:-3]}')
 
+#discord機器人運轉指令
+#"TOKEN"：這台機器人的ID
 bot.run(json_data["TOKEN"])
